@@ -26,21 +26,29 @@ public class ProducerDemo {
 
 
     public static void main(String[] args) throws PulsarClientException {
+        // 创建pulsar客户端
         PulsarClient client = PulsarClient.builder()
                 .serviceUrl("pulsar://101.42.108.126:6650")
                 .build();
-        Producer<byte[]> producer = client.newProducer().topic("lxs").create();
+        // 创建生产者
+        Producer<byte[]> producer = client.newProducer().topic("test-topic-1").create();
+        producer.send("发送一条字符串消息".getBytes());
 
-        producer.send("发送消息 哈哈哈".getBytes());
-
-
+        // 创建消费者
         Consumer<byte[]> consumer = client.newConsumer()
-                .topic("lxs")
-                .subscriptionName("my-subscription")
+                .topic("test-topic-1")
+                .subscriptionName("test-subscription-1")
                 .subscribe();
 
-        Message<byte[]> receive = consumer.receive();
-        System.out.println(receive.getTopicName());
+        //获取消息内容
+        Message<byte[]> message = consumer.receive();
+        System.out.println("接受消息内容: " + new String(message.getData()));
+        // 确认消费成功，以便pulsar删除消费成功的消息
+        consumer.acknowledge(message);
 
+        //关闭客户端
+        producer.close();
+        consumer.close();
+        client.close();
     }
 }

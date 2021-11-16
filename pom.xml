@@ -8,14 +8,18 @@
         <version>2.4.12</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.pulsar.demo</groupId>
     <artifactId>pulsar-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>pulsar-demo</name>
     <description>Demo project for Spring Boot</description>
+
     <properties>
         <java.version>1.8</java.version>
+        <pulsar.version>2.8.1</pulsar.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -28,7 +32,7 @@
         <dependency>
             <groupId>org.apache.pulsar</groupId>
             <artifactId>pulsar-client</artifactId>
-            <version>2.8.1</version>
+            <version>${pulsar.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -41,7 +45,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
