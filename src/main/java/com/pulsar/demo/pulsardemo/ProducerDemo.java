@@ -28,9 +28,9 @@ import java.util.concurrent.ExecutionException;
  */
 @Data
 public class ProducerDemo {
-    
+
     private static PulsarClient PULSAR_CLIENT = null;
-    
+
     static {
         try {
             // 创建pulsar客户端
@@ -39,36 +39,36 @@ public class ProducerDemo {
             e.printStackTrace();
         }
     }
-    
-    
+
+
     public static void main(String[] args) throws PulsarClientException, ExecutionException, InterruptedException {
-        
+
         // 发送方式测试
         sendTest();
-        
+
         // 创建消费者
         Consumer<byte[]> consumer = PULSAR_CLIENT.newConsumer().topic("test-topic-1")
                 .subscriptionName("test-subscription-1").subscribe();
-        
+
         //获取消息内容
         Message<byte[]> message = consumer.receive();
         System.out.println("接受消息内容: " + new String(message.getData()));
         // 确认消费成功，以便pulsar删除消费成功的消息
         consumer.acknowledge(message);
-        
+
         //关闭客户端
         //        producer.close();
         consumer.close();
         PULSAR_CLIENT.close();
     }
-    
+
     private static void sendTest() throws PulsarClientException, InterruptedException, ExecutionException {
         // 创建生产者
         Producer<byte[]> producer = PULSAR_CLIENT.newProducer().topic("test-topic-1").create();
         // 同步发送消息
         MessageId messageId = producer.send("同步发送的消息".getBytes(StandardCharsets.UTF_8));
         System.out.println("同步发送，消息id: " + messageId);
-        
+
         CompletableFuture<MessageId> messageIdCompletableFuture = producer.sendAsync(
                 "异步发送的消息".getBytes(StandardCharsets.UTF_8));
         System.out.println("异步发送，消息id：" + messageIdCompletableFuture.get());
